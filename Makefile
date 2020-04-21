@@ -1,9 +1,11 @@
 # Git repo metadata
 TAG = $(shell git describe --tags --always)
 # TODO: if your docher hub account name is different then this on github ovrwrite this this variable with docer hub accout name
-PREFIX = $(shell git config --get remote.origin.url | tr ':.' '/'  | rev | cut -d '/' -f 3 | rev)
-# TODO: if your repository name is different then this github repository name on ovrwrite this variable with docer hub repo name
-REPO_NAME = $(shell git config --get remote.origin.url | tr ':.' '/'  | rev | cut -d '/' -f 2 | rev)
+# PREFIX = $(shell git config --get remote.origin.url | tr ':.' '/'  | rev | cut -d '/' -f 3 | rev)
+PREFIX = jakubsr
+# TODO: if your repository name is different then this github repository name on ovrwrite this variable with docer hub repo 
+# REPO_NAME = $(shell git config --get remote.origin.url | tr ':.' '/'  | rev | cut -d '/' -f 2 | rev)
+REPO_NAME = io-lab-docker-ci
 
 # Image metadata
 
@@ -39,12 +41,18 @@ image:
 		--build-arg SCHEMA_BUILD_DATE="$(SCHEMA_BUILD_DATE)" \
 		--build-arg SCHEMA_BUILD_VERSION="$(SCHEMA_BUILD_VERSION)" \
 		--build-arg SCHEMA_CMD="$(SCHEMA_CMD)" \
+		--tag "$(SCHEMA_NAME):latest" \
+		.
 	
   # TODO: last part of this command that tags just built image with a specyfic tag
-	
+	docker tag $(SCHEMA_NAME):latest $(SCHEMA_NAME):ca2de2a
+
+
 push: image
 	# TODO: two commands, first pushes the latest image, second pushes the image tagged with specyfic tag
-	
+	docker push $(SCHEMA_NAME):latest
+	docker push $(SCHEMA_NAME):ca2de2a
+
 clean:
 
 .PHONY: clean image push all
